@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "crypto_guard_ctx.h"
+#include <gtest/gtest.h>
 #include <sstream>
 
 TEST(TestEncrypt, EncryptChangesContent) {
@@ -37,11 +37,10 @@ TEST(TestEncrypt, InvalidPasswordHandling) {
     std::stringstream in(original);
     const std::string password = "password";
     std::stringstream out;
-    out.setstate(std::_Ios_Iostate::_S_failbit);
+    out.setstate(std::ios_base::iostate::_S_failbit);
     CryptoGuard::CryptoGuardCtx cryptoCtx;
     ASSERT_THROW(cryptoCtx.EncryptFile(in, out, password), std::runtime_error);
 }
-
 
 class CryptoGuardCtxTest : public ::testing::Test {
 protected:
@@ -77,10 +76,7 @@ TEST_F(CryptoGuardCtxTest, DecryptWithInvalidPasswordFails) {
     std::stringstream in(encryptedData);
     std::stringstream out;
 
-    ASSERT_THROW(
-        ctx.DecryptFile(in, out, "invalid_password");,
-        std::runtime_error
-    );
+    ASSERT_THROW(ctx.DecryptFile(in, out, "invalid_password");, std::runtime_error);
     // ctx.DecryptFile(in, out, "invalid_password");
 
     // EXPECT_NE(out.str(), originalText);
@@ -88,15 +84,11 @@ TEST_F(CryptoGuardCtxTest, DecryptWithInvalidPasswordFails) {
 
 TEST_F(CryptoGuardCtxTest, DecryptInvalidInputThrows) {
     std::stringstream in;
-    in.setstate(std::_Ios_Iostate::_S_badbit);
+    in.setstate(std::ios_base::iostate::_S_badbit);
     std::stringstream out;
 
-    ASSERT_THROW(
-        ctx.DecryptFile(in, out, password),
-        std::runtime_error
-    );
+    ASSERT_THROW(ctx.DecryptFile(in, out, password), std::runtime_error);
 }
-
 
 class CryptoGuardCtxSumTest : public CryptoGuardCtxTest {
 protected:
@@ -124,7 +116,7 @@ TEST_F(CryptoGuardCtxSumTest, CheckSum) {
 
 TEST_F(CryptoGuardCtxSumTest, CheckSumInvalidInputThrows) {
     std::stringstream in;
-    in.setstate(std::_Ios_Iostate::_S_badbit);
+    in.setstate(std::ios_base::iostate::_S_badbit);
 
-    ASSERT_THROW( ctx.CalculateChecksum(in), std::runtime_error);
+    ASSERT_THROW(ctx.CalculateChecksum(in), std::runtime_error);
 }
